@@ -1,12 +1,9 @@
 package biz.opengate.fatturaelettronica.validator;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStream;
 import java.io.Reader;
-import java.nio.file.Files;
 import javax.xml.XMLConstants;
-import javax.xml.bind.JAXB;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.ValidationEvent;
@@ -20,6 +17,7 @@ import org.w3c.dom.ls.LSResourceResolver;
 import org.xml.sax.helpers.DefaultHandler;
 
 import biz.opengate.fatturaelettronica.FatturaElettronicaType;
+import biz.opengate.fatturaelettronica.utils.FEUtils;
 
 public class FatturaElettronicaValidator {
 	
@@ -51,6 +49,8 @@ public class FatturaElettronicaValidator {
 		///////////////////////////////////////////////////////////////////////
 		FatturaElettronicaContentValidator fecv = new FatturaElettronicaContentValidator();
 		fecv.controllaContenutoFatturaElettronica(fatturaElettronica);
+		
+		System.out.println("Fattura valida");
 	}
 	
 	private static class ResourceResolverImpl implements LSResourceResolver {
@@ -112,12 +112,14 @@ public class FatturaElettronicaValidator {
 	
 	public static void main(String[] args) throws Exception {
 		
-		File file = new File("/home/francesco/Downloads/IT08033300966_0000P.xml");
-		FatturaElettronicaType fe = JAXB.unmarshal(new ByteArrayInputStream(Files.readAllBytes(file.toPath())),FatturaElettronicaType.class);
-//		System.out.println(fe.toString());
+		FatturaElettronicaType fatturaElettronica;
+		fatturaElettronica = Test.NewFattura();
 		
 		FatturaElettronicaValidator fev = new FatturaElettronicaValidator();
 		
-		fev.controllaFatturaElettronica(fe);
+		fev.controllaFatturaElettronica(fatturaElettronica);
+		
+		File f = FEUtils.MarshalToFile(fatturaElettronica, "");
+		f.createNewFile();
 	}
 }
