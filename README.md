@@ -11,15 +11,12 @@ fattura-elettronica è una libreria utile a semplificare molte delle complicazio
 FatturaElettronicaType fatturaElettronica;
 
 //Genera una fattura elettronica di prova
-fatturaElettronica = Test.NewFattura();
-
-//
-FatturaElettronicaValidator fev = new FatturaElettronicaValidator();
+fatturaElettronica = Test.newFattura();
 
 //Controlla che la fattura elettronica sia valida
-fev.controllaFatturaElettronica(fatturaElettronica);
+FatturaElettronicaValidator.controllaFE(fatturaElettronica);
 
 //Genera il file xml con i dati della fattura elettronica
-File f = FEUtils.MarshalToFile(fatturaElettronica, "");
+File f = FEUtils.marshalToFile(fatturaElettronica, "");
 f.createNewFile();
 ```
