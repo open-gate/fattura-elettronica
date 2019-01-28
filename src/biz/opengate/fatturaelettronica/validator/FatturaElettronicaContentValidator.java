@@ -31,22 +31,22 @@ public class FatturaElettronicaContentValidator {
 		//Errore 426
 		if(datiTrasmissione.getPECDestinatario()!=null) {
 			if(!datiTrasmissione.getCodiceDestinatario().equals("0000000"))
-				throw new Exception(Errori.e426);
+				throw new Exception(Errori.e426b);
 		}
 		if(datiTrasmissione.getCodiceDestinatario().equals("0000000")) {
 			if(datiTrasmissione.getPECDestinatario()==null) {
-				throw new Exception(Errori.e426);
+				throw new Exception(Errori.e426a);
 			}
 		}
 		
 		//Errore 427
 		if(datiTrasmissione.getFormatoTrasmissione() == FormatoTrasmissioneType.FPA_12) {
 			if(datiTrasmissione.getCodiceDestinatario().length() == 7) {
-				throw new Exception(Errori.e427);
+				throw new Exception(Errori.e427a);
 			}
 		} else {
 			if(datiTrasmissione.getCodiceDestinatario().length() == 6) {
-				throw new Exception(Errori.e427);
+				throw new Exception(Errori.e427b);
 			}
 		}
 		
@@ -97,7 +97,7 @@ public class FatturaElettronicaContentValidator {
 		
 		//Errore 425
 		if(!datiGeneraliDocumento.getNumero().matches(".*[0-9]+.*"))
-			throw new Exception(Errori.e425);
+			throw new Exception(Errori.e425 + "\n(" + datiGeneraliDocumento.getNumero() + ")");
 		
 		DatiRitenutaType datiRitenuta;
 		if(datiGeneraliDocumento.getDatiRitenuta() != null)
@@ -135,7 +135,7 @@ public class FatturaElettronicaContentValidator {
 			
 			//Errore 424
 			if(!datiCassaPrevidenziale.getAliquotaIVA().equals(BigDecimal.ZERO.setScale(2)) && datiCassaPrevidenziale.getAliquotaIVA().compareTo(BigDecimal.ONE) == -1) {
-				throw new Exception(Errori.e424);
+				throw new Exception(Errori.e424c + "\n(IVA dati cassa previdenziale: " + datiCassaPrevidenziale.getAliquotaIVA() + ")");
 			}
 		}
 		
@@ -191,7 +191,7 @@ public class FatturaElettronicaContentValidator {
 
 			//Errore 424
 			if(!dettaglioLinea.getAliquotaIVA().equals(BigDecimal.ZERO.setScale(2)) && dettaglioLinea.getAliquotaIVA().compareTo(BigDecimal.ONE) == -1) {
-				throw new Exception(Errori.e424);
+				throw new Exception(Errori.e424a + "\n(Riga di dettaglio " + dettaglioLinea.getNumeroLinea() + " con IVA: " + dettaglioLinea.getAliquotaIVA() + ")");
 			}
 
 			//Errore 411, 415
@@ -227,13 +227,13 @@ public class FatturaElettronicaContentValidator {
 			BigDecimal div = mult.divide(new BigDecimal(100)).setScale(2, RoundingMode.HALF_UP);
 //			System.out.println(div.subtract(toll)+">"+datiRiepilogo.getImposta()+"<"+div.add(toll));
 			if(!(datiRiepilogo.getImposta().compareTo(div.subtract(toll)) == 1 && datiRiepilogo.getImposta().compareTo(div.add(toll)) == -1)) {
-				throw new Exception(Errori.e421);
+				throw new Exception(Errori.e421 + "\n(" + datiRiepilogo.getImposta() + " != " + div +")");
 			}
 			//Tolleranza: 1 centesimo di euro. Se la differenza tra i valori confrontati è inferiore a ±0,01 il controllo si ritiene superato
 
 			//Errore 424
 			if(!datiRiepilogo.getAliquotaIVA().equals(BigDecimal.ZERO.setScale(2)) && datiRiepilogo.getAliquotaIVA().compareTo(BigDecimal.ONE) == -1) {
-				throw new Exception(Errori.e424);
+				throw new Exception(Errori.e424b + "\n(IVA dati riepilogo: " + datiRiepilogo.getAliquotaIVA() + ")");
 			}
 			
 			//Errore 429, 430
@@ -267,12 +267,14 @@ public class FatturaElettronicaContentValidator {
 		public static String e421 = "Errore 00421 - " + "2.2.2.6 <Imposta> non calcolato secondo le regole definite nelle specifiche tecniche";
 		public static String e422 = "Errore 00422 - " + "2.2.2.5 <ImponibileImporto> non calcolato secondo le regole definite nelle specifiche tecniche";
 		public static String e423 = "Errore 00423 - " + "2.2.1.11 <PrezzoTotale> non calcolato secondo le regole definite nelle specifiche tecniche";
-		public static String e424 = "Errore 00424 - " + "2.2.1.12 <AliquotaIVA> o 2.2.2.1< AliquotaIVA> o 2.1.1.7.5 <AliquotaIVA> non indicata in termini percentuali";
+		public static String e424a = "Errore 00424 - " + "2.2.1.12 <AliquotaIVA> non indicata in termini percentuali";
+		public static String e424b = "Errore 00424 - " + "2.2.2.1< AliquotaIVA> non indicata in termini percentuali";
+		public static String e424c = "Errore 00424 - " + "2.1.1.7.5 <AliquotaIVA> non indicata in termini percentuali";
 		public static String e425 = "Errore 00425 - " + "2.1.1.4 <Numero> non contenente caratteri numerici";
-		public static String e426 = "Errore 00426 - " + "1.1.6 <PECDestinatario> non valorizzato a fronte di 1.1.4 <CodiceDestinatario> con valore 0000000, o " + 
-														"1.1.6 <PECDestinatario> valorizzato a fronte di 1.1.4 <CodiceDestinatario> con valore diverso da 0000000";
-		public static String e427 = "Errore 00427 - " + "1.1.4 <CodiceDestinatario> di 7 caratteri a fronte di 1.1.3 <FormatoTrasmissione> con valore “FPA12” o " + 
-														"1.1.4 <CodiceDestinatario> di 6 caratteri a fronte di 1.1.3 <FormatoTrasmissione> con valore “FPR12”";
+		public static String e426a = "Errore 00426 - " + "1.1.6 <PECDestinatario> non valorizzato a fronte di 1.1.4 <CodiceDestinatario> con valore 0000000";
+		public static String e426b = "Errore 00426 - " + "1.1.6 <PECDestinatario> valorizzato a fronte di 1.1.4 <CodiceDestinatario> con valore diverso da 0000000";
+		public static String e427a = "Errore 00427 - " + "1.1.4 <CodiceDestinatario> di 7 caratteri a fronte di 1.1.3 <FormatoTrasmissione> con valore “FPA12”";
+		public static String e427b = "Errore 00427 - " + "1.1.4 <CodiceDestinatario> di 6 caratteri a fronte di 1.1.3 <FormatoTrasmissione> con valore “FPR12”";
 		public static String e428 = "Errore 00428 - " + "1.1.3 <FormatoTrasmissione> non coerente con il valore dell’attributo VERSIONE";
 		public static String e429 = "Errore 00429 - " + "2.2.2.2 <Natura> non presente a fronte di 2.2.2.1 <AliquotaIVA> pari a zero";
 		public static String e430 = "Errore 00430 - " + "2.2.2.2 <Natura> presente a fronte di 2.2.2.1 <AliquotaIVA> diversa da zero";

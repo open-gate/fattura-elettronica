@@ -85,7 +85,8 @@ public class FatturaElettronicaCalcoli {
 //					"<" + total.add(BigDecimal.ONE));
 			if (!(imponibileImporto.compareTo(total.setScale(2).subtract(one)) == 1
 					&& imponibileImporto.compareTo(total.setScale(2).add(one)) == -1))
-				throw new Exception(FatturaElettronicaContentValidator.Errori.e422);
+				throw new Exception(FatturaElettronicaContentValidator.Errori.e422 +
+						"\n(" + imponibileImporto + " != " + total.setScale(2) + ")");
 			//Tolleranza: 1 euro. Se la differenza tra i valori confrontati è inferiore a ±1 il controllo si ritiene superato
 		}
 		
@@ -149,7 +150,8 @@ public class FatturaElettronicaCalcoli {
 			//if(!dettaglioLinea.getPrezzoTotale().equals(result)) {
 			if (!(dettaglioLinea.getPrezzoTotale().compareTo(result.subtract(toll)) == 1
 					&& dettaglioLinea.getPrezzoTotale().compareTo(result.add(toll)) == -1)) {
-				throw new Exception(FatturaElettronicaContentValidator.Errori.e423);
+				throw new Exception(FatturaElettronicaContentValidator.Errori.e423 +
+						"\n(" + dettaglioLinea.getPrezzoTotale() + " != " + result + ")");
 			}
 			//Tolleranza: 1 centesimo di euro. Se la differenza tra i valori confrontati è inferiore a ±0,01 il controllo si ritiene superato
 		}

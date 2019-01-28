@@ -135,11 +135,16 @@ public class FatturaElettronicaValidator {
 	}
 	
 	public static void main(String[] args) throws Exception {
+		//Inizializza la fattura elettronica
 		FatturaElettronicaType fatturaElettronica;
+
+		//Genera una fattura elettronica di prova
 		fatturaElettronica = Test.newFattura();
-		
+
+		//Controlla che la fattura elettronica sia valida
 		FatturaElettronicaValidator.controllaFE(fatturaElettronica);
-		
+
+		//Genera il file xml con i dati della fattura elettronica
 		File f = FEUtils.marshalToFile(fatturaElettronica, "");
 		f.createNewFile();
 	}
