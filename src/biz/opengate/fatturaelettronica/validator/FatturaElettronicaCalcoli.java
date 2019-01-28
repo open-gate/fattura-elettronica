@@ -10,7 +10,17 @@ import biz.opengate.fatturaelettronica.*;
 public class FatturaElettronicaCalcoli {
 	
 	//Errore 422
-	public void controllaCalcoloImponibileImporto(DatiBeniServiziType datiBeniServizi, DatiGeneraliType datiGenerali) throws Exception {
+    /**
+     * Check if the taxable amount was calculated correctly
+     *
+     * @param datiBeniServizi
+     *      DatiBeniServiziType object.
+     * @param datiGenerali
+     * 		DatiGeneraliType object
+     *
+     * @throws Exception
+     */
+	public static void controllaCalcoloImponibileImporto(DatiBeniServiziType datiBeniServizi, DatiGeneraliType datiGenerali) throws Exception {
 		List<BigDecimal> aliquotaIVAList = new ArrayList<BigDecimal>();
 		BigDecimal one = BigDecimal.ONE;
 		
@@ -83,7 +93,15 @@ public class FatturaElettronicaCalcoli {
 	}
 	
 	//Errore 423
-	public void controllaCalcoloPrezzoTotale(List<DettaglioLineeType> dettaglioLineeList) throws Exception {
+    /**
+     * Check if the total price was calculated correctly
+     *
+     * @param dettaglioLineeList
+     *      List of DettaglioLineeType objects
+     *
+     * @throws Exception
+     */
+	public static void controllaCalcoloPrezzoTotale(List<DettaglioLineeType> dettaglioLineeList) throws Exception {
 		BigDecimal scontoMaggiorazioneTot;
 		BigDecimal result;
 		BigDecimal toll = new BigDecimal(0.01).setScale(2, RoundingMode.HALF_UP);

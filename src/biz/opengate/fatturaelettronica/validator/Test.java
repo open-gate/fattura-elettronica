@@ -9,7 +9,7 @@ import biz.opengate.fatturaelettronica.*;
 import biz.opengate.fatturaelettronica.utils.FEUtils;
 
 public class Test {
-	public static FatturaElettronicaType NewFattura() throws DatatypeConfigurationException {
+	public static FatturaElettronicaType newFattura() throws DatatypeConfigurationException {
 		FatturaElettronicaType fatturaElettronica = new FatturaElettronicaType();
 			fatturaElettronica.setVersione(FormatoTrasmissioneType.FPR_12);
 		

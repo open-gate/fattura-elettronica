@@ -6,7 +6,6 @@
 			<attribute name="owner.project.facets" value="java"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="/EmptyApp13Support/modules/org/bouncycastle/main/bcpkix-jdk15on-155.jar"/>
 	<classpathentry kind="lib" path="lib/org/bouncycastle/main/bcpkix-jdk15on-155.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

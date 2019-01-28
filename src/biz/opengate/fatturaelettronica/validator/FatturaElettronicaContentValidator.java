@@ -11,7 +11,17 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import biz.opengate.fatturaelettronica.*;
 
 public class FatturaElettronicaContentValidator {
-	public void controllaContenutoFatturaElettronica(FatturaElettronicaType fatturaElettronica) throws Exception {
+
+    /**
+     * Check for extra schema errors in the electronic invoice, and
+     * if the taxable amount and total price were calculated correctly
+     *
+     * @param fatturaElettronica
+     *      Fattura elettronica.
+     *
+     * @throws Exception
+     */
+	public static void controllaContenutoFE(FatturaElettronicaType fatturaElettronica) throws Exception {
 		System.out.println("Controllo Header");
 		//1
 		FatturaElettronicaHeaderType feHeader = fatturaElettronica.getFatturaElettronicaHeader();
@@ -53,27 +63,28 @@ public class FatturaElettronicaContentValidator {
 			throw new Exception(Errori.e417);
 		}
 		
-
-		//Calcoli
-		FatturaElettronicaCalcoli fec = new FatturaElettronicaCalcoli();
 		// BODY
 		for (FatturaElettronicaBodyType feBody : fatturaElettronica.getFatturaElettronicaBody()) {
 			System.out.println("Controllo Body " + feBody.getDatiGenerali().getDatiGeneraliDocumento().getNumero());
-			controllaFatturaElettronicaBody(feBody);
-			fec.controllaCalcoloImponibileImporto(feBody.getDatiBeniServizi(), feBody.getDatiGenerali());
-			fec.controllaCalcoloPrezzoTotale(feBody.getDatiBeniServizi().getDettaglioLinee());
+			controllaFEBody(feBody);
+			FatturaElettronicaCalcoli.controllaCalcoloImponibileImporto(feBody.getDatiBeniServizi(), feBody.getDatiGenerali());
+			FatturaElettronicaCalcoli.controllaCalcoloPrezzoTotale(feBody.getDatiBeniServizi().getDettaglioLinee());
 		}
-
-
 	}
 
-	public void controllaFatturaElettronicaBody(FatturaElettronicaBodyType feBody) throws Exception {
+    /**
+     * Check for extra schema errors in the electronic invoice body
+     *
+     * @param fatturaElettronica
+     *      Fattura elettronica.
+     *
+     * @throws Exception
+     */
+	public static void controllaFEBody(FatturaElettronicaBodyType feBody) throws Exception {
 		
 		//Errore 419
 		int TotAliquoteIva = 0;
 		List<BigDecimal> AliquoteIva = new ArrayList<BigDecimal>();
-		
-		
 		
 		// 2.1 DatiGenerali
 		DatiGeneraliType datiGenerali = feBody.getDatiGenerali();
@@ -278,5 +289,4 @@ public class FatturaElettronicaContentValidator {
 		
 		System.out.println(a +"/"+b);
 	}
-
 }

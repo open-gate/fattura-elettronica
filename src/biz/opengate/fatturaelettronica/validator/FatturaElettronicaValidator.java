@@ -19,16 +19,40 @@ import org.xml.sax.helpers.DefaultHandler;
 import biz.opengate.fatturaelettronica.FatturaElettronicaType;
 import biz.opengate.fatturaelettronica.utils.FEUtils;
 
+/**
+ * <a href="https://github.com/open-gate/fattura-elettronica/wiki">Wiki</a><br>
+ * <a href="https://www.fatturapa.gov.it/export/fatturazione/sdi/Specifiche_tecniche_del_formato_FatturaPA_v1.0.pdf">
+ * Specifiche tecniche del formato FatturaPA</a>
+ * <br>
+ * <a href="https://www.fatturapa.gov.it/export/fatturazione/sdi/Elenco_Controlli_V1.5.pdf">Controlli Extra XSD</a>
+ * 
+ */
 public class FatturaElettronicaValidator {
-	
-	public void controllaFatturaElettronica(FatturaElettronicaType fatturaElettronica) throws Exception {
+
+    /**
+     * Check for errors in the electronic invoice through the schema file,
+     * then check for extra schema errors, and finally
+     * check if the taxable amount and total price were calculated correctly.<br>
+     * 
+     * <a href="https://www.fatturapa.gov.it/export/fatturazione/sdi/Specifiche_tecniche_del_formato_FatturaPA_v1.0.pdf">
+     * Specifiche tecniche del formato FatturaPA</a>
+     * <br>
+     * <a href="https://www.fatturapa.gov.it/export/fatturazione/sdi/Elenco_Controlli_V1.5.pdf">Controlli Extra XSD</a>
+     * 
+     * @param fatturaElettronica
+     *      Fattura elettronica.
+     *
+     * @throws Exception
+     */
+	public static void controllaFE(FatturaElettronicaType fatturaElettronica) throws Exception {
 		System.out.println("Controllo Fattura Elettronica");
 		///////////////////////////////////////////////////////////////////////
 		final Schema schema;
 		try {
 			SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 			sf.setResourceResolver(new ResourceResolverImpl());
-			InputStream schemafatturaStream = this.getClass().getClassLoader().getResourceAsStream("Schemafattura.xsd");
+			InputStream schemafatturaStream = FatturaElettronicaValidator.class.getClassLoader()
+					.getResourceAsStream("Schemafattura.xsd");
 			schema = sf.newSchema(new StreamSource(schemafatturaStream));
 		} catch (Exception e) {
 			throw new Exception("Impossibile analizzare il file xsd");
@@ -47,14 +71,14 @@ public class FatturaElettronicaValidator {
 		if (validationHandler.hasErrors())
 			throw new FatturaElettronicaValidationException(validationHandler.getResult());
 		///////////////////////////////////////////////////////////////////////
-		FatturaElettronicaContentValidator fecv = new FatturaElettronicaContentValidator();
-		fecv.controllaContenutoFatturaElettronica(fatturaElettronica);
+		FatturaElettronicaContentValidator.controllaContenutoFE(fatturaElettronica);
 		
 		System.out.println("Fattura valida");
 	}
 	
 	private static class ResourceResolverImpl implements LSResourceResolver {
-		public LSInput resolveResource(String type, String namespaceURI, String publicId, String systemId, String baseURI) {
+		public LSInput resolveResource(String type, String namespaceURI,
+				String publicId, String systemId, String baseURI) {
 			if ("xmldsig-core-schema.xsd".equals(systemId)) {
 				LSInputImpl input = new LSInputImpl();
 				input.setBaseURI(baseURI);
@@ -111,15 +135,12 @@ public class FatturaElettronicaValidator {
 	}
 	
 	public static void main(String[] args) throws Exception {
-		
 		FatturaElettronicaType fatturaElettronica;
-		fatturaElettronica = Test.NewFattura();
+		fatturaElettronica = Test.newFattura();
 		
-		FatturaElettronicaValidator fev = new FatturaElettronicaValidator();
+		FatturaElettronicaValidator.controllaFE(fatturaElettronica);
 		
-		fev.controllaFatturaElettronica(fatturaElettronica);
-		
-		File f = FEUtils.MarshalToFile(fatturaElettronica, "");
+		File f = FEUtils.marshalToFile(fatturaElettronica, "");
 		f.createNewFile();
 	}
 }

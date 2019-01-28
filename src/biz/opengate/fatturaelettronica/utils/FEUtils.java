@@ -22,23 +22,52 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import biz.opengate.fatturaelettronica.FatturaElettronicaType;
 
 public class FEUtils {
-	
-	public static XMLGregorianCalendar dateToXmlGregCal(Date d) throws DatatypeConfigurationException {
+
+    /**
+     * Convert a Date object in an XMLGregorianCalendar
+     *
+     * @param date
+     *      Date object.
+     * 
+     * @return XMLGregorianCalendar object.
+     * 
+     * @throws DatatypeConfigurationException
+     */
+	public static XMLGregorianCalendar dateToXmlGregCal(Date date) throws DatatypeConfigurationException  {
 		GregorianCalendar cal = new GregorianCalendar();
-		cal.setTime(d);
+		cal.setTime(date);
 		XMLGregorianCalendar xmldate = DatatypeFactory.newInstance().newXMLGregorianCalendarDate(cal.get(Calendar.YEAR),
 				cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DAY_OF_MONTH), cal.getTimeZone().getRawOffset() / 60000);
 		xmldate.setTimezone(DatatypeConstants.FIELD_UNDEFINED);
 
 		return xmldate;
 	}
-	
-	public static FatturaElettronicaType Unmarshal(byte[] bytes) {
+
+    /**
+     * Unmarshal the electronic invoice
+     *
+     * @param bytes
+     *      Byte array.
+     * 
+     * @return FatturaElettronicaType object.
+     */
+	public static FatturaElettronicaType unmarshal(byte[] bytes) {
 		return JAXB.unmarshal(new ByteArrayInputStream(bytes),FatturaElettronicaType.class);
 	}
-	
-	public static FatturaElettronicaType Unmarshal(File f) throws IOException {
-		byte[] bytes = Files.readAllBytes(f.toPath());
+
+    /**
+     * Unmarshal the electronic invoice
+     *
+     * @param file
+     *      File Object.
+     *      
+     * @throws IOException
+	 *		If an I/O error occurs.
+     * 
+     * @return FatturaElettronicaType object.
+     */
+	public static FatturaElettronicaType unmarshal(File file) throws IOException {
+		byte[] bytes = Files.readAllBytes(file.toPath());
 		return JAXB.unmarshal(new ByteArrayInputStream(bytes),FatturaElettronicaType.class);
 	}
 	
@@ -47,20 +76,70 @@ public class FEUtils {
 		marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 		return marshaller;
 	}
-	
-	public static byte[] Marshal(FatturaElettronicaType fe) throws JAXBException {
-		
+
+    /**
+     * Marshal the electronic invoice.
+     *
+     * @param fe
+     *      Fattura elettronica.
+     *
+     * @throws JAXBException
+     *      If any unexpected problem occurs during the marshalling.
+     * 
+     * @return Byte array of the marshalled object
+     */
+	public static byte[] marshal(FatturaElettronicaType fe) throws JAXBException {
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
 		setupMarshaller().marshal(fe, os);
 		return os.toByteArray();
 	}
-	
-	public static File MarshalToFile(FatturaElettronicaType fe, String path) throws JAXBException, IOException {
-		
+
+    /**
+     * Marshal the electronic invoice.
+     *
+     * @param fe
+     *      Fattura elettronica.
+     * @param path
+     *      File path.
+     *
+     * @throws JAXBException
+     *      If any unexpected problem occurs during the marshalling.
+     * @throws IOException
+	 *		If an I/O error occurs.
+     * 
+     * @return The marshalled File object with an auto generated name with code "00000"
+     */
+	public static File marshalToFile(FatturaElettronicaType fe, String path) throws JAXBException, IOException {
 		String absolutepath = path + 
 				fe.getFatturaElettronicaHeader().getDatiTrasmissione().getIdTrasmittente().getIdPaese() + 
 				fe.getFatturaElettronicaHeader().getDatiTrasmissione().getIdTrasmittente().getIdCodice() +
 				"_" + "00000" + ".xml";
+		
+		FileOutputStream os = new FileOutputStream(absolutepath);
+		setupMarshaller().marshal(fe, os);
+		os.close();
+		return new File(absolutepath);
+	}
+	
+    /**
+     * Marshal the electronic invoice.
+     *
+     * @param fe
+     *      Fattura elettronica.
+     * @param path
+     *      File path.
+     * @param name
+     *      File name.
+     *
+     * @throws JAXBException
+     *      If any unexpected problem occurs during the marshalling.
+     * @throws IOException
+	 *		If an I/O error occurs.
+     * 
+     * @return The marshalled File object
+     */
+	public static File marshalToFile(FatturaElettronicaType fe, String path, String name) throws JAXBException, IOException {
+		String absolutepath = path + name;
 		
 		FileOutputStream os = new FileOutputStream(absolutepath);
 		setupMarshaller().marshal(fe, os);
