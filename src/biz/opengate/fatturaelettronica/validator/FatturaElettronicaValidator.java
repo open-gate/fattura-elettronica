@@ -77,8 +77,8 @@ public class FatturaElettronicaValidator {
 	}
 	
 	private static class ResourceResolverImpl implements LSResourceResolver {
-		public LSInput resolveResource(String type, String namespaceURI,
-				String publicId, String systemId, String baseURI) {
+		public LSInput resolveResource(String type, String namespaceURI, String publicId, String systemId,
+				String baseURI) {
 			if ("xmldsig-core-schema.xsd".equals(systemId)) {
 				LSInputImpl input = new LSInputImpl();
 				input.setBaseURI(baseURI);
@@ -102,7 +102,9 @@ public class FatturaElettronicaValidator {
 		
 		@Override public String getEncoding() { return "utf-8"; }
 		@Override public void setEncoding(String arg0) {}
-		@Override public InputStream getByteStream() { return this.getClass().getClassLoader().getResourceAsStream("xmldsig-core-schema.xsd"); }
+		@Override public InputStream getByteStream() {
+			return this.getClass().getClassLoader().getResourceAsStream("xmldsig-core-schema.xsd");
+		}
 		@Override public void setByteStream(InputStream arg0) {}
 		@Override public Reader getCharacterStream() { return null; }
 		@Override public void setCharacterStream(Reader arg0) {}

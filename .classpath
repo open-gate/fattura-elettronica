@@ -7,5 +7,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="lib/org/bouncycastle/main/bcpkix-jdk15on-155.jar"/>
+	<classpathentry kind="lib" path="lib/org/bouncycastle/main/commons-codec-1.10.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
