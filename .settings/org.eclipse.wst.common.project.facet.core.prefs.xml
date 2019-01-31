@@ -11,10 +11,10 @@
     </node>
     <node name="schemas">
       <node name="schema-1">
-        <attribute name="location" value="platform:/resource/biz.opengate.fatturaelettronica/src/Schemafattura.xsd"/>
+        <attribute name="location" value="platform:/resource/fatturaElettronica/src/main/resources/Schemafattura.xsd"/>
       </node>
       <node name="schema-2">
-        <attribute name="location" value="platform:/resource/biz.opengate.fatturaelettronica/src/MessaggiTypes_v1.1.xsd"/>
+        <attribute name="location" value="platform:/resource/fatturaElettronica/src/main/resources/MessaggiTypes_v1.1.xsd"/>
       </node>
     </node>
   </facet>
