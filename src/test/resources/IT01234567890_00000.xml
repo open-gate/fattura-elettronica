@@ -63,7 +63,7 @@
             <DatiGeneraliDocumento>
                 <TipoDocumento>TD01</TipoDocumento>
                 <Divisa>EUR</Divisa>
-                <Data>2019-01-28</Data>
+                <Data>2019-01-31</Data>
                 <Numero>1</Numero>
                 <ImportoTotaleDocumento>100.00</ImportoTotaleDocumento>
                 <Arrotondamento>0.00</Arrotondamento>
@@ -97,7 +97,7 @@
             <CondizioniPagamento>TP01</CondizioniPagamento>
             <DettaglioPagamento>
                 <ModalitaPagamento>MP05</ModalitaPagamento>
-                <DataScadenzaPagamento>2019-01-28</DataScadenzaPagamento>
+                <DataScadenzaPagamento>2019-01-31</DataScadenzaPagamento>
                 <ImportoPagamento>200.00</ImportoPagamento>
             </DettaglioPagamento>
         </DatiPagamento>

@@ -1,4 +1,4 @@
-package biz.opengate.fatturaelettronica.validator;
+package biz.opengate.fatturaElettronica.tests;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -8,7 +8,7 @@ import javax.xml.datatype.DatatypeConfigurationException;
 import biz.opengate.fatturaelettronica.*;
 import biz.opengate.fatturaelettronica.utils.FEUtils;
 
-public class Test {
+public class FatturaElettronicaSemplice {
 	public static FatturaElettronicaType newFattura() throws DatatypeConfigurationException {
 		FatturaElettronicaType fatturaElettronica = new FatturaElettronicaType();
 			fatturaElettronica.setVersione(FormatoTrasmissioneType.FPR_12);
