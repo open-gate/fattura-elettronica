@@ -1,6 +1,5 @@
 package biz.opengate.fatturaelettronica.validator;
 
-import java.io.File;
 import java.io.InputStream;
 import java.io.Reader;
 import javax.xml.XMLConstants;
@@ -17,7 +16,6 @@ import org.w3c.dom.ls.LSResourceResolver;
 import org.xml.sax.helpers.DefaultHandler;
 
 import biz.opengate.fatturaelettronica.FatturaElettronicaType;
-import biz.opengate.fatturaelettronica.utils.FEUtils;
 
 /**
  * <a href="https://github.com/open-gate/fattura-elettronica/wiki">Wiki</a><br>
