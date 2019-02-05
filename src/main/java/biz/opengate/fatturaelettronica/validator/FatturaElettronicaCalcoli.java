@@ -111,10 +111,10 @@ public class FatturaElettronicaCalcoli {
 			scontoMaggiorazioneTot = dettaglioLinea.getPrezzoUnitario();
 			
 //			System.out.print("DT: " + dettaglioLinea.getNumeroLinea());
-			if (dettaglioLinea.getScontoMaggiorazione().isEmpty()) {
-//				System.out.println("\tNo Sconto/Maggiorazione");
-				continue;
-			}
+//			if (dettaglioLinea.getScontoMaggiorazione().isEmpty()) {
+////				System.out.println("\tNo Sconto/Maggiorazione");
+//				continue;
+//			}
 			for (ScontoMaggiorazioneType scontoMaggiorazione : dettaglioLinea.getScontoMaggiorazione()) {
 //				System.out.println("\t" + scontoMaggiorazione.getTipo().toString());
 				if (scontoMaggiorazione.getImporto() != null) {// Importo

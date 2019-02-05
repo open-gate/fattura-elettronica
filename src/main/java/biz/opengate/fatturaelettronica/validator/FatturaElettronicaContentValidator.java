@@ -22,7 +22,7 @@ public class FatturaElettronicaContentValidator {
      * @throws Exception
      */
 	public static void controllaContenutoFE(FatturaElettronicaType fatturaElettronica) throws Exception {
-		System.out.println("Controllo Header");
+		//System.out.println("Controllo Header");
 		//1
 		FatturaElettronicaHeaderType feHeader = fatturaElettronica.getFatturaElettronicaHeader();
 		//1.1
@@ -65,7 +65,7 @@ public class FatturaElettronicaContentValidator {
 		
 		// BODY
 		for (FatturaElettronicaBodyType feBody : fatturaElettronica.getFatturaElettronicaBody()) {
-			System.out.println("Controllo Body " + feBody.getDatiGenerali().getDatiGeneraliDocumento().getNumero());
+			//System.out.println("Controllo Body " + feBody.getDatiGenerali().getDatiGeneraliDocumento().getNumero());
 			controllaFEBody(feBody);
 			FatturaElettronicaCalcoli.controllaCalcoloImponibileImporto(feBody.getDatiBeniServizi(), feBody.getDatiGenerali());
 			FatturaElettronicaCalcoli.controllaCalcoloPrezzoTotale(feBody.getDatiBeniServizi().getDettaglioLinee());
@@ -105,7 +105,7 @@ public class FatturaElettronicaContentValidator {
 		else
 			datiRitenuta = null;
 		
-		//Errore 411, 415
+		//Errore 415
 		boolean datiRitenutaNecessari = false;
 		// 2.1.1.7
 		for(DatiCassaPrevidenzialeType datiCassaPrevidenziale : datiGeneraliDocumento.getDatiCassaPrevidenziale()) {
@@ -119,13 +119,10 @@ public class FatturaElettronicaContentValidator {
 					throw new Exception(Errori.e414);
 				}
 			}
-			
+
 			//Errore 415
-			if(datiRitenutaNecessari) {
-				if(datiCassaPrevidenziale.getRitenuta()==null) {
-					throw new Exception(Errori.e415);
-				}
-			}
+			if(datiCassaPrevidenziale.getRitenuta() == RitenutaType.SI)
+				datiRitenutaNecessari = true;
 			
 			//Errore 419
 			if(!AliquoteIva.contains(datiCassaPrevidenziale.getAliquotaIVA())){
@@ -136,6 +133,12 @@ public class FatturaElettronicaContentValidator {
 			//Errore 424
 			if(!datiCassaPrevidenziale.getAliquotaIVA().equals(BigDecimal.ZERO.setScale(2)) && datiCassaPrevidenziale.getAliquotaIVA().compareTo(BigDecimal.ONE) == -1) {
 				throw new Exception(Errori.e424c + "\n(IVA dati cassa previdenziale: " + datiCassaPrevidenziale.getAliquotaIVA() + ")");
+			}
+		}
+		
+		if(datiRitenutaNecessari) {
+			if(datiGeneraliDocumento.getDatiRitenuta() == null) {
+				throw new Exception(Errori.e415);
 			}
 		}
 		
@@ -158,6 +161,8 @@ public class FatturaElettronicaContentValidator {
 			}
 		}
 
+		//Errore 411
+		datiRitenutaNecessari = false;
 		// 2.2 DatiBeniServizi
 		DatiBeniServiziType datiBeniServizi = feBody.getDatiBeniServizi();
 		
@@ -194,7 +199,7 @@ public class FatturaElettronicaContentValidator {
 				throw new Exception(Errori.e424a + "\n(Riga di dettaglio " + dettaglioLinea.getNumeroLinea() + " con IVA: " + dettaglioLinea.getAliquotaIVA() + ")");
 			}
 
-			//Errore 411, 415
+			//Errore 411
 			if(dettaglioLinea.getRitenuta() == RitenutaType.SI)
 				datiRitenutaNecessari = true;
 			

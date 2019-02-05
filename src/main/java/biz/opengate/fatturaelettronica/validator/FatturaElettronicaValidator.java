@@ -43,7 +43,7 @@ public class FatturaElettronicaValidator {
      * @throws Exception
      */
 	public static void controllaFE(FatturaElettronicaType fatturaElettronica) throws Exception {
-		System.out.println("Controllo Fattura Elettronica");
+		//System.out.println("Controllo Fattura Elettronica");
 		///////////////////////////////////////////////////////////////////////
 		final Schema schema;
 		try {
@@ -71,7 +71,7 @@ public class FatturaElettronicaValidator {
 		///////////////////////////////////////////////////////////////////////
 		FatturaElettronicaContentValidator.controllaContenutoFE(fatturaElettronica);
 		
-		System.out.println("Fattura valida");
+		//System.out.println("Fattura valida");
 	}
 	
 	private static class ResourceResolverImpl implements LSResourceResolver {

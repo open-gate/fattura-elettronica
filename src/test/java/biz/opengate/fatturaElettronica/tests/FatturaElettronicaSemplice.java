@@ -13,6 +13,7 @@ public class FatturaElettronicaSemplice {
 	static Date date = new GregorianCalendar(2020, 0, 1).getTime();
 	
 	public static FatturaElettronicaType newFattura() throws DatatypeConfigurationException {
+		
 		FatturaElettronicaType fatturaElettronica = new FatturaElettronicaType();
 			fatturaElettronica.setVersione(FormatoTrasmissioneType.FPR_12);
 		
@@ -269,10 +270,5 @@ public class FatturaElettronicaSemplice {
 			
 		fatturaElettronica.getFatturaElettronicaBody().add(fatturaElettronicaBody);
 	return fatturaElettronica;
-	}
-
-	public static void testXML(FatturaElettronicaType fatturaElettronica) {
-		System.out.println(fatturaElettronica.getFatturaElettronicaHeader().getCedentePrestatore().getDatiAnagrafici()
-				.getAnagrafica().getDenominazione());
 	}
 }
