@@ -153,7 +153,7 @@ f.createNewFile();
 
 ### Importare una fattura
 
-Una fattura può essere esportata sia tramite file (File), che tramite array di byte (byte\[\]).
+Una fattura può essere importata sia tramite file (File), che tramite array di byte (byte\[\]).
 ```
 FatturaElettronicaType fatturaElettronica = unmarshal(file);
 ```
