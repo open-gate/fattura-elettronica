@@ -39,18 +39,13 @@ public class FatturaElettronicaTest {
 		try {
 			FatturaElettronicaValidator.controllaFE(
 				FEUtils.unmarshal(new File(this.getClass().getResource(filename).getFile())));
-			System.out.println("Test " + errorcode + subcode + " Fail");
+			throw new Exception("Test " + errorcode + subcode + " Fail");
 		} catch (Exception e) {
-//			System.out.println(e.getMessage());
-//			System.out.println(error);
-//			System.out.println(e.getMessage().matches(error + "(?s).*"));
-//			System.out.println(e.getMessage().matches(error));
-//			System.out.println(e.getMessage().equals(error));
 			if (!e.getMessage().matches(error + "(?s).*") && !e.getMessage().equals(error))
 				throw e;
-			else
-				System.out.println("Test " + errorcode + subcode + " OK");
 		}
+		System.out.println("Test " + errorcode + subcode + " OK");
+		return;
 	}
 	
 	@Test
@@ -96,6 +91,5 @@ public class FatturaElettronicaTest {
 		testerror("/IT08033300966_ER430.xml", Errori.e430);
 		testerror("/IT08033300966_ER437.xml", Errori.e437);
 		testerror("/IT08033300966_ER438.xml", Errori.e438);
-		
 	}
 }

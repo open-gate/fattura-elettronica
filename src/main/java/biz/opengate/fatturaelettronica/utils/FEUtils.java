@@ -29,15 +29,45 @@ public class FEUtils {
      * @param date
      *      Date object.
      * 
-     * @return XMLGregorianCalendar object.
+     * @return XMLGregorianCalendar object with Year, Month and Day.
      * 
      * @throws DatatypeConfigurationException
      */
 	public static XMLGregorianCalendar dateToXmlGregCal(Date date) throws DatatypeConfigurationException  {
 		GregorianCalendar cal = new GregorianCalendar();
 		cal.setTime(date);
-		XMLGregorianCalendar xmldate = DatatypeFactory.newInstance().newXMLGregorianCalendarDate(cal.get(Calendar.YEAR),
-				cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DAY_OF_MONTH), cal.getTimeZone().getRawOffset() / 60000);
+		XMLGregorianCalendar xmldate = DatatypeFactory.newInstance().newXMLGregorianCalendarDate(
+				cal.get(Calendar.YEAR),
+				cal.get(Calendar.MONTH) + 1,
+				cal.get(Calendar.DAY_OF_MONTH),
+				cal.getTimeZone().getRawOffset() / 60000);
+		xmldate.setTimezone(DatatypeConstants.FIELD_UNDEFINED);
+
+		return xmldate;
+	}
+
+    /**
+     * Convert a Date object in an XMLGregorianCalendar
+     *
+     * @param date
+     *      Date object.
+     * 
+     * @return XMLGregorianCalendar object with Year, Month, Day, Hour, Minute, Second and Millisecond.
+     * 
+     * @throws DatatypeConfigurationException
+     */
+	public static XMLGregorianCalendar dateToXmlGregCalTime(Date date) throws DatatypeConfigurationException  {
+		GregorianCalendar cal = new GregorianCalendar();
+		cal.setTime(date);
+		XMLGregorianCalendar xmldate = DatatypeFactory.newInstance().newXMLGregorianCalendar(
+				cal.get(Calendar.YEAR),
+				cal.get(Calendar.MONTH) + 1,
+				cal.get(Calendar.DAY_OF_MONTH),
+				cal.get(Calendar.HOUR),
+				cal.get(Calendar.MINUTE),
+				cal.get(Calendar.SECOND),
+				DatatypeConstants.FIELD_UNDEFINED,
+				cal.getTimeZone().getRawOffset() / 60000);
 		xmldate.setTimezone(DatatypeConstants.FIELD_UNDEFINED);
 
 		return xmldate;
@@ -145,5 +175,33 @@ public class FEUtils {
 		setupMarshaller().marshal(fe, os);
 		os.close();
 		return new File(absolutepath);
+	}
+
+    /**
+     * Marshal the electronic invoice directly in the specified file.
+     *
+     * @param fe
+     *      Fattura elettronica.
+     * @param file
+     *      File object.
+     *
+     * @throws JAXBException
+     *      If any unexpected problem occurs during the marshalling.
+     * @throws IOException
+	 *		If an I/O error occurs.
+     */
+	public static void marshalToFile(FatturaElettronicaType fe, File file) throws JAXBException, IOException {
+		FileOutputStream os = new FileOutputStream(file);
+		setupMarshaller().marshal(fe, os);
+		os.close();
+		return;
+	}
+	
+	public static void main(String[] args) throws DatatypeConfigurationException{
+		Date date = new GregorianCalendar(2020, 0, 1, 11, 30, 40).getTime();
+
+		System.out.println(dateToXmlGregCal(date));
+		
+		System.out.println(dateToXmlGregCalTime(date));
 	}
 }
