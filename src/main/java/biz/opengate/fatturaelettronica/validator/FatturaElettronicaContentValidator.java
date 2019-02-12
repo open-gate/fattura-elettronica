@@ -1,7 +1,6 @@
 package biz.opengate.fatturaelettronica.validator;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -227,13 +226,14 @@ public class FatturaElettronicaContentValidator {
 			}
 			
 			//Errore 421
-			BigDecimal toll = new BigDecimal(0.01).setScale(2, RoundingMode.HALF_UP);
-			BigDecimal mult = datiRiepilogo.getAliquotaIVA().multiply(datiRiepilogo.getImponibileImporto());
-			BigDecimal div = mult.divide(new BigDecimal(100)).setScale(2, RoundingMode.HALF_UP);
-//			System.out.println(div.subtract(toll)+">"+datiRiepilogo.getImposta()+"<"+div.add(toll));
-			if(!(datiRiepilogo.getImposta().compareTo(div.subtract(toll)) == 1 && datiRiepilogo.getImposta().compareTo(div.add(toll)) == -1)) {
-				throw new Exception(Errori.e421 + "\n(" + datiRiepilogo.getImposta() + " != " + div +")");
-			}
+            BigDecimal mult = datiRiepilogo.getAliquotaIVA().multiply(datiRiepilogo.getImponibileImporto());
+            mult = mult.divide(new BigDecimal(100));
+            BigDecimal diff = datiRiepilogo.getImposta().subtract(mult).abs();
+            
+            if(diff.compareTo(new BigDecimal("0.01"))>=0) {
+                throw new Exception(Errori.e421 + "\n(" + datiRiepilogo.getImposta() + " != " + mult +")");
+            }
+			
 			//Tolleranza: 1 centesimo di euro. Se la differenza tra i valori confrontati è inferiore a ±0,01 il controllo si ritiene superato
 
 			//Errore 424
@@ -285,15 +285,5 @@ public class FatturaElettronicaContentValidator {
 		public static String e430 = "Errore 00430 - " + "2.2.2.2 <Natura> presente a fronte di 2.2.2.1 <AliquotaIVA> diversa da zero";
 		public static String e437 = "Errore 00437 - " + "2.1.1.8.2 <Percentuale> e 2.1.1.8.3 <Importo> non presenti a fronte di 2.1.1.8.1 <Tipo> valorizzato";
 		public static String e438 = "Errore 00438 - " + "2.2.1.10.2 <Percentuale> e 2.2.1.10.3 <Importo> non presenti a fronte di 2.2.1.10.1 <Tipo> valorizzato";
-	}
-	
-	public static void main(String[] args) {
-		BigDecimal a = new BigDecimal(1500.2449);
-		BigDecimal b = new BigDecimal(1500.2458);
-		
-		a=a.setScale(2, RoundingMode.HALF_UP);
-		b=b.setScale(2, RoundingMode.HALF_UP);
-		
-		System.out.println(a +"/"+b);
 	}
 }

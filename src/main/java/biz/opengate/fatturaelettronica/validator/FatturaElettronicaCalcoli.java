@@ -22,7 +22,6 @@ public class FatturaElettronicaCalcoli {
      */
 	public static void controllaCalcoloImponibileImporto(DatiBeniServiziType datiBeniServizi, DatiGeneraliType datiGenerali) throws Exception {
 		List<BigDecimal> aliquotaIVAList = new ArrayList<BigDecimal>();
-		BigDecimal one = BigDecimal.ONE;
 		
 		for (DettaglioLineeType dl : datiBeniServizi.getDettaglioLinee()) {
 			if (!aliquotaIVAList.contains(dl.getAliquotaIVA()))
@@ -77,14 +76,9 @@ public class FatturaElettronicaCalcoli {
 //					" == " + total.setScale(2)
 //					);
 			
-//			if(!imponibileImporto.equals(total.setScale(2)))
-//				throw new Exception(FatturaElettronicaContentValidator.Errori.e422);
-
-//			System.out.println(total.subtract(BigDecimal.ONE) + 
-//					">" + imponibileImporto +
-//					"<" + total.add(BigDecimal.ONE));
-			if (!(imponibileImporto.compareTo(total.setScale(2).subtract(one)) == 1
-					&& imponibileImporto.compareTo(total.setScale(2).add(one)) == -1))
+			BigDecimal diff = imponibileImporto.subtract(total).abs();
+			
+			if (diff.compareTo(BigDecimal.ONE)>=0)
 				throw new Exception(FatturaElettronicaContentValidator.Errori.e422 +
 						"\n(" + imponibileImporto + " != " + total.setScale(2) + ")");
 			//Tolleranza: 1 euro. Se la differenza tra i valori confrontati è inferiore a ±1 il controllo si ritiene superato
@@ -105,7 +99,6 @@ public class FatturaElettronicaCalcoli {
 	public static void controllaCalcoloPrezzoTotale(List<DettaglioLineeType> dettaglioLineeList) throws Exception {
 		BigDecimal scontoMaggiorazioneTot;
 		BigDecimal result;
-		BigDecimal toll = new BigDecimal(0.01).setScale(2, RoundingMode.HALF_UP);
 		
 		for (DettaglioLineeType dettaglioLinea : dettaglioLineeList) {
 			scontoMaggiorazioneTot = dettaglioLinea.getPrezzoUnitario();
@@ -147,24 +140,15 @@ public class FatturaElettronicaCalcoli {
 			
 			result = result.setScale(2, RoundingMode.HALF_UP);
 //			System.out.println("\tResult: "+dettaglioLinea.getPrezzoTotale() + "==" + result);
-			//if(!dettaglioLinea.getPrezzoTotale().equals(result)) {
-			if (!(dettaglioLinea.getPrezzoTotale().compareTo(result.subtract(toll)) == 1
-					&& dettaglioLinea.getPrezzoTotale().compareTo(result.add(toll)) == -1)) {
+			
+			BigDecimal diff = dettaglioLinea.getPrezzoTotale().subtract(result).abs();
+			
+			if (diff.compareTo(new BigDecimal("0.01")) >= 0 ) {
 				throw new Exception(FatturaElettronicaContentValidator.Errori.e423 +
 						"\n(" + dettaglioLinea.getPrezzoTotale() + " != " + result + ")");
 			}
 			//Tolleranza: 1 centesimo di euro. Se la differenza tra i valori confrontati è inferiore a ±0,01 il controllo si ritiene superato
 		}
 //	System.out.println("\nFine Calcolo PT\n\n");
-	}
-	
-	public static void main(String[] args) {
-		BigDecimal a = new BigDecimal(5);
-		BigDecimal b = new BigDecimal(5.9);
-
-		boolean x = b.compareTo(a.subtract(BigDecimal.ONE)) == 1 && b.compareTo(a.add(BigDecimal.ONE)) == -1;
-		System.out.println(
-				a.subtract(BigDecimal.ONE) + ">" + b.setScale(2, RoundingMode.HALF_UP) + "<" + a.add(BigDecimal.ONE));
-		System.out.println(x);
 	}
 }
