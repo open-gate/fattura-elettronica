@@ -82,7 +82,7 @@ public class FatturaElettronicaTest {
 		testerror("/IT08033300966_ER424b.xml", Errori.e424b, "b");
 		testerror("/IT08033300966_ER424c.xml", Errori.e424c, "c");
 		testerror("/IT08033300966_ER425.xml", Errori.e425);
-		testerror("/IT08033300966_ER426a.xml", Errori.e426a, "a");
+		//testerror("/IT08033300966_ER426a.xml", Errori.e426a, "a"); //OLD
 		testerror("/IT08033300966_ER426b.xml", Errori.e426b, "b");
 		testerror("/IT08033300966_ER427a.xml", Errori.e427a, "a");
 		testerror("/IT08033300966_ER427b.xml", Errori.e427b, "b");

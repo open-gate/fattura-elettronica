@@ -32,11 +32,12 @@ public class FatturaElettronicaContentValidator {
 			if(!datiTrasmissione.getCodiceDestinatario().equals("0000000"))
 				throw new Exception(Errori.e426b);
 		}
-		if(datiTrasmissione.getCodiceDestinatario().equals("0000000")) {
-			if(datiTrasmissione.getPECDestinatario()==null) {
-				throw new Exception(Errori.e426a);
-			}
-		}
+		//Old
+//		if(datiTrasmissione.getCodiceDestinatario().equals("0000000")) {
+//			if(datiTrasmissione.getPECDestinatario()==null) {
+//				throw new Exception(Errori.e426a);
+//			}
+//		}
 		
 		//Errore 427
 		if(datiTrasmissione.getFormatoTrasmissione() == FormatoTrasmissioneType.FPA_12) {
