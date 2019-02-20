@@ -49,11 +49,16 @@ public class FatturaElettronicaValidator {
 		try {
 			SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 			sf.setResourceResolver(new ResourceResolverImpl());
+			String resource = "Schemafattura.xsd";
 			InputStream schemafatturaStream = FatturaElettronicaValidator.class.getClassLoader()
-					.getResourceAsStream("Schemafattura.xsd");
+					.getResourceAsStream("/resources/"+resource);
+			if(schemafatturaStream == null) {
+				schemafatturaStream = FatturaElettronicaValidator.class.getClassLoader()
+						.getResourceAsStream(resource);
+			}
 			schema = sf.newSchema(new StreamSource(schemafatturaStream));
 		} catch (Exception e) {
-			throw new Exception("Impossibile analizzare il file xsd");
+			throw e;
 		}
 		///////////////////////////////////////////////////////////////////////
 		ValidationEventHandlerImpl validationHandler = new ValidationEventHandlerImpl();
@@ -101,7 +106,12 @@ public class FatturaElettronicaValidator {
 		@Override public String getEncoding() { return "utf-8"; }
 		@Override public void setEncoding(String arg0) {}
 		@Override public InputStream getByteStream() {
-			return this.getClass().getClassLoader().getResourceAsStream("xmldsig-core-schema.xsd");
+			String resource = "xmldsig-core-schema.xsd";
+			InputStream is = this.getClass().getClassLoader().getResourceAsStream("/resources/"+resource);
+			if(is == null) {
+				is = this.getClass().getClassLoader().getResourceAsStream(resource);
+			}
+			return is;
 		}
 		@Override public void setByteStream(InputStream arg0) {}
 		@Override public Reader getCharacterStream() { return null; }
