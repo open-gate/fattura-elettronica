@@ -22,7 +22,7 @@ public class FatturaElettronicaSemplice {
 				DatiTrasmissioneType datiTrasmissione = new DatiTrasmissioneType();
 					IdFiscaleType idTrasmittente = new IdFiscaleType();
 						idTrasmittente.setIdPaese("IT");
-						idTrasmittente.setIdCodice("01234567890");
+						idTrasmittente.setIdCodice("07643520567");
 					datiTrasmissione.setIdTrasmittente(idTrasmittente);
 					datiTrasmissione.setProgressivoInvio("000");
 					datiTrasmissione.setFormatoTrasmissione(FormatoTrasmissioneType.FPR_12);
@@ -34,7 +34,7 @@ public class FatturaElettronicaSemplice {
 					DatiAnagraficiCedenteType datiAnagraficiCedente = new DatiAnagraficiCedenteType();
 						IdFiscaleType idFiscaleCedente = new IdFiscaleType();
 							idFiscaleCedente.setIdPaese("IT");
-							idFiscaleCedente.setIdCodice("01234567890");
+							idFiscaleCedente.setIdCodice("07643520567");
 						datiAnagraficiCedente.setIdFiscaleIVA(idFiscaleCedente);
 						datiAnagraficiCedente.setCodiceFiscale("01234567890");
 						AnagraficaType anagraficaCedente = new AnagraficaType();
@@ -62,7 +62,7 @@ public class FatturaElettronicaSemplice {
 					DatiAnagraficiCessionarioType datiAnagraficiCessionario = new DatiAnagraficiCessionarioType();
 						IdFiscaleType idFiscaleCessionario = new IdFiscaleType();
 							idFiscaleCessionario.setIdPaese("IT");
-							idFiscaleCessionario.setIdCodice("01234567890");
+							idFiscaleCessionario.setIdCodice("07643520567");
 						datiAnagraficiCessionario.setIdFiscaleIVA(idFiscaleCessionario);
 						datiAnagraficiCessionario.setCodiceFiscale("01234567890");
 						AnagraficaType anagraficaCessionario = new AnagraficaType();
@@ -160,7 +160,7 @@ public class FatturaElettronicaSemplice {
 			DatiTrasmissioneType datiTrasmissione = new DatiTrasmissioneType();
 				IdFiscaleType idTrasmittente = new IdFiscaleType();
 					idTrasmittente.setIdPaese("IT");
-					idTrasmittente.setIdCodice("01234567890");
+					idTrasmittente.setIdCodice("07643520567");
 				datiTrasmissione.setIdTrasmittente(idTrasmittente);
 				datiTrasmissione.setProgressivoInvio("000");
 				datiTrasmissione.setFormatoTrasmissione(FormatoTrasmissioneType.FPR_12);
@@ -172,7 +172,7 @@ public class FatturaElettronicaSemplice {
 				DatiAnagraficiCedenteType datiAnagraficiCedente = new DatiAnagraficiCedenteType();
 					IdFiscaleType idFiscaleCedente = new IdFiscaleType();
 						idFiscaleCedente.setIdPaese("IT");
-						idFiscaleCedente.setIdCodice("01234567890");
+						idFiscaleCedente.setIdCodice("07643520567");
 					datiAnagraficiCedente.setIdFiscaleIVA(idFiscaleCedente);
 					datiAnagraficiCedente.setCodiceFiscale("01234567890");
 					AnagraficaType anagraficaCedente = new AnagraficaType();

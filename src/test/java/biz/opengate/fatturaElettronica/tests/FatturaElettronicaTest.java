@@ -9,6 +9,7 @@ import org.junit.Test;
 
 import biz.opengate.fatturaelettronica.FatturaElettronicaType;
 import biz.opengate.fatturaelettronica.utils.FEUtils;
+import biz.opengate.fatturaelettronica.utils.IVAUtils;
 import biz.opengate.fatturaelettronica.validator.FatturaElettronicaContentValidator.Errori;
 import biz.opengate.fatturaelettronica.validator.FatturaElettronicaValidator;
 import junitx.framework.FileAssert;
@@ -91,5 +92,30 @@ public class FatturaElettronicaTest {
 		testerror("/IT08033300966_ER430.xml", Errori.e430);
 		testerror("/IT08033300966_ER437.xml", Errori.e437);
 		testerror("/IT08033300966_ER438.xml", Errori.e438);
+
+		try {
+			IVAUtils.validateIVA("07643520567");
+		} catch (Exception e){
+			throw new Exception("Test IVA 1 Failed");
+		}
+		System.out.println("Test IVA 1 OK");
+		
+		try {
+			IVAUtils.validateIVA("01234567890");
+		} catch (Exception e){
+			if(!e.getMessage().equals(Errori.eIVA))
+				throw new Exception("Test IVA 2 Failed");
+			else
+				System.out.println("Test IVA 2 OK");
+		}
+		
+		try {
+			IVAUtils.validateIVA("SaaS");
+		} catch (Exception e){
+			if(!e.getMessage().equals(Errori.eIVA))
+				throw new Exception("Test IVA 3 Failed");
+			else
+				System.out.println("Test IVA 3 OK");
+		}
 	}
 }

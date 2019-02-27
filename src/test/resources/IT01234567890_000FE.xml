@@ -4,7 +4,7 @@
         <DatiTrasmissione>
             <IdTrasmittente>
                 <IdPaese>IT</IdPaese>
-                <IdCodice>01234567890</IdCodice>
+                <IdCodice>07643520567</IdCodice>
             </IdTrasmittente>
             <ProgressivoInvio>000</ProgressivoInvio>
             <FormatoTrasmissione>FPR12</FormatoTrasmissione>
@@ -15,7 +15,7 @@
             <DatiAnagrafici>
                 <IdFiscaleIVA>
                     <IdPaese>IT</IdPaese>
-                    <IdCodice>01234567890</IdCodice>
+                    <IdCodice>07643520567</IdCodice>
                 </IdFiscaleIVA>
                 <CodiceFiscale>01234567890</CodiceFiscale>
                 <Anagrafica>

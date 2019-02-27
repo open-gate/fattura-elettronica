@@ -8,6 +8,7 @@ import javax.xml.datatype.DatatypeConstants;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import biz.opengate.fatturaelettronica.*;
+import biz.opengate.fatturaelettronica.utils.IVAUtils;
 
 public class FatturaElettronicaContentValidator {
 
@@ -21,7 +22,6 @@ public class FatturaElettronicaContentValidator {
      * @throws Exception
      */
 	public static void controllaContenutoFE(FatturaElettronicaType fatturaElettronica) throws Exception {
-		//System.out.println("Controllo Header");
 		//1
 		FatturaElettronicaHeaderType feHeader = fatturaElettronica.getFatturaElettronicaHeader();
 		//1.1
@@ -32,12 +32,6 @@ public class FatturaElettronicaContentValidator {
 			if(!datiTrasmissione.getCodiceDestinatario().equals("0000000"))
 				throw new Exception(Errori.e426b);
 		}
-		//Old
-//		if(datiTrasmissione.getCodiceDestinatario().equals("0000000")) {
-//			if(datiTrasmissione.getPECDestinatario()==null) {
-//				throw new Exception(Errori.e426a);
-//			}
-//		}
 		
 		//Errore 427
 		if(datiTrasmissione.getFormatoTrasmissione() == FormatoTrasmissioneType.FPA_12) {
@@ -53,8 +47,28 @@ public class FatturaElettronicaContentValidator {
 		//Errore 428
 		if(datiTrasmissione.getFormatoTrasmissione() != fatturaElettronica.getVersione())
 			throw new Exception(Errori.e428);
+
+		//IVA
+		if(datiTrasmissione.getIdTrasmittente().getIdPaese() == "IT")
+			IVAUtils.validateIVA(datiTrasmissione.getIdTrasmittente().getIdCodice());
+		
+		//1.2
+		CedentePrestatoreType cedentePrestatore = feHeader.getCedentePrestatore();
+
+		if(cedentePrestatore.getDatiAnagrafici().getIdFiscaleIVA().getIdPaese() == "IT")
+			IVAUtils.validateIVA(cedentePrestatore.getDatiAnagrafici().getIdFiscaleIVA().getIdCodice());
+		
+		//1.3
+		RappresentanteFiscaleType rappresentanteFiscale = feHeader.getRappresentanteFiscale();
+		if(rappresentanteFiscale!=null) {
+			//IVA
+			if(rappresentanteFiscale.getDatiAnagrafici().getIdFiscaleIVA().getIdPaese() == "IT")
+				IVAUtils.validateIVA(rappresentanteFiscale.getDatiAnagrafici().getIdFiscaleIVA().getIdCodice());
+		}
+		
 		//1.4
 		CessionarioCommittenteType cessionarioCommittente = feHeader.getCessionarioCommittente();
+		
 		//1.4.1
 		DatiAnagraficiCessionarioType datiAnagraficiCessionario = cessionarioCommittente.getDatiAnagrafici();
 		
@@ -62,10 +76,22 @@ public class FatturaElettronicaContentValidator {
 		if(datiAnagraficiCessionario.getIdFiscaleIVA() == null && datiAnagraficiCessionario.getCodiceFiscale() == null) {
 			throw new Exception(Errori.e417);
 		}
+
+		//IVA
+		if(cessionarioCommittente.getDatiAnagrafici().getIdFiscaleIVA().getIdPaese() == "IT")
+			IVAUtils.validateIVA(cessionarioCommittente.getDatiAnagrafici().getIdFiscaleIVA().getIdCodice());
+		
+		//1.5
+		TerzoIntermediarioSoggettoEmittenteType terzoIntermediarioSoggettoEmittente = feHeader.getTerzoIntermediarioOSoggettoEmittente();
+		if(terzoIntermediarioSoggettoEmittente != null) {
+			//IVA
+			if(terzoIntermediarioSoggettoEmittente.getDatiAnagrafici().getIdFiscaleIVA().getIdPaese() == "IT")
+				IVAUtils.validateIVA(terzoIntermediarioSoggettoEmittente.getDatiAnagrafici().getIdFiscaleIVA().getIdCodice());
+		}
+		
 		
 		// BODY
 		for (FatturaElettronicaBodyType feBody : fatturaElettronica.getFatturaElettronicaBody()) {
-			//System.out.println("Controllo Body " + feBody.getDatiGenerali().getDatiGeneraliDocumento().getNumero());
 			controllaFEBody(feBody);
 			FatturaElettronicaCalcoli.controllaCalcoloImponibileImporto(feBody.getDatiBeniServizi(), feBody.getDatiGenerali());
 			FatturaElettronicaCalcoli.controllaCalcoloPrezzoTotale(feBody.getDatiBeniServizi().getDettaglioLinee());
@@ -286,5 +312,6 @@ public class FatturaElettronicaContentValidator {
 		public static String e430 = "Errore 00430 - " + "2.2.2.2 <Natura> presente a fronte di 2.2.2.1 <AliquotaIVA> diversa da zero";
 		public static String e437 = "Errore 00437 - " + "2.1.1.8.2 <Percentuale> e 2.1.1.8.3 <Importo> non presenti a fronte di 2.1.1.8.1 <Tipo> valorizzato";
 		public static String e438 = "Errore 00438 - " + "2.2.1.10.2 <Percentuale> e 2.2.1.10.3 <Importo> non presenti a fronte di 2.2.1.10.1 <Tipo> valorizzato";
+		public static String eIVA = "Codice IVA non valido";
 	}
 }
