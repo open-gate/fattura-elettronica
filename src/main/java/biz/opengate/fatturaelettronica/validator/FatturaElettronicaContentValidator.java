@@ -49,20 +49,21 @@ public class FatturaElettronicaContentValidator {
 			throw new Exception(Errori.e428);
 
 		//IVA
-		if(datiTrasmissione.getIdTrasmittente().getIdPaese() == "IT")
+		if(datiTrasmissione.getIdTrasmittente().getIdPaese().equals("IT"))
 			IVAUtils.validateIVA(datiTrasmissione.getIdTrasmittente().getIdCodice());
 		
 		//1.2
 		CedentePrestatoreType cedentePrestatore = feHeader.getCedentePrestatore();
-
-		if(cedentePrestatore.getDatiAnagrafici().getIdFiscaleIVA().getIdPaese() == "IT")
+		
+		//IVA
+		if(cedentePrestatore.getDatiAnagrafici().getIdFiscaleIVA().getIdPaese().equals("IT"))
 			IVAUtils.validateIVA(cedentePrestatore.getDatiAnagrafici().getIdFiscaleIVA().getIdCodice());
 		
 		//1.3
 		RappresentanteFiscaleType rappresentanteFiscale = feHeader.getRappresentanteFiscale();
 		if(rappresentanteFiscale!=null) {
 			//IVA
-			if(rappresentanteFiscale.getDatiAnagrafici().getIdFiscaleIVA().getIdPaese() == "IT")
+			if(rappresentanteFiscale.getDatiAnagrafici().getIdFiscaleIVA().getIdPaese().equals("IT"))
 				IVAUtils.validateIVA(rappresentanteFiscale.getDatiAnagrafici().getIdFiscaleIVA().getIdCodice());
 		}
 		
@@ -78,14 +79,14 @@ public class FatturaElettronicaContentValidator {
 		}
 
 		//IVA
-		if(cessionarioCommittente.getDatiAnagrafici().getIdFiscaleIVA().getIdPaese() == "IT")
+		if(cessionarioCommittente.getDatiAnagrafici().getIdFiscaleIVA().getIdPaese().equals("IT"))
 			IVAUtils.validateIVA(cessionarioCommittente.getDatiAnagrafici().getIdFiscaleIVA().getIdCodice());
 		
 		//1.5
 		TerzoIntermediarioSoggettoEmittenteType terzoIntermediarioSoggettoEmittente = feHeader.getTerzoIntermediarioOSoggettoEmittente();
 		if(terzoIntermediarioSoggettoEmittente != null) {
 			//IVA
-			if(terzoIntermediarioSoggettoEmittente.getDatiAnagrafici().getIdFiscaleIVA().getIdPaese() == "IT")
+			if(terzoIntermediarioSoggettoEmittente.getDatiAnagrafici().getIdFiscaleIVA().getIdPaese().equals("IT"))
 				IVAUtils.validateIVA(terzoIntermediarioSoggettoEmittente.getDatiAnagrafici().getIdFiscaleIVA().getIdCodice());
 		}
 		
