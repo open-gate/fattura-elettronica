@@ -79,8 +79,11 @@ public class FatturaElettronicaContentValidator {
 		}
 
 		//IVA
-		if(cessionarioCommittente.getDatiAnagrafici().getIdFiscaleIVA().getIdPaese().equals("IT"))
-			IVAUtils.validateIVA(cessionarioCommittente.getDatiAnagrafici().getIdFiscaleIVA().getIdCodice());
+		if(cessionarioCommittente.getDatiAnagrafici().getIdFiscaleIVA()!=null)
+		{
+			if(cessionarioCommittente.getDatiAnagrafici().getIdFiscaleIVA().getIdPaese().equals("IT"))
+				IVAUtils.validateIVA(cessionarioCommittente.getDatiAnagrafici().getIdFiscaleIVA().getIdCodice());
+		}
 		
 		//1.5
 		TerzoIntermediarioSoggettoEmittenteType terzoIntermediarioSoggettoEmittente = feHeader.getTerzoIntermediarioOSoggettoEmittente();
