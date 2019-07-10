@@ -1,6 +1,7 @@
 package biz.opengate.fatturaelettronica.validator;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -257,14 +258,13 @@ public class FatturaElettronicaContentValidator {
 			}
 			
 			//Errore 421
-            BigDecimal mult = datiRiepilogo.getAliquotaIVA().multiply(datiRiepilogo.getImponibileImporto());
-            mult = mult.divide(new BigDecimal(100));
-            BigDecimal diff = datiRiepilogo.getImposta().subtract(mult).abs();
-            
-            if(diff.compareTo(new BigDecimal("0.01"))>=0) {
-                throw new Exception(Errori.e421 + "\n(" + datiRiepilogo.getImposta() + " != " + mult +")");
-            }
-			
+			BigDecimal toll = new BigDecimal(0.01).setScale(2, RoundingMode.HALF_UP);
+			BigDecimal mult = datiRiepilogo.getAliquotaIVA().multiply(datiRiepilogo.getImponibileImporto());
+			BigDecimal div = mult.divide(new BigDecimal(100)).setScale(2, RoundingMode.HALF_UP);
+
+			if(!(datiRiepilogo.getImposta().compareTo(div.subtract(toll)) == 1 && datiRiepilogo.getImposta().compareTo(div.add(toll)) == -1)) {
+				throw new Exception(Errori.e421 + "\n(" + datiRiepilogo.getImposta() + " != " + div +")");
+			}
 			//Tolleranza: 1 centesimo di euro. Se la differenza tra i valori confrontati è inferiore a ±0,01 il controllo si ritiene superato
 
 			//Errore 424
