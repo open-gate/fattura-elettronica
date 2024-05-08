@@ -60,18 +60,12 @@
     <FatturaElettronicaBody>
         <DatiGenerali>
             <DatiGeneraliDocumento>
-                <TipoDocumento>TD01</TipoDocumento>
+                <TipoDocumento>TD21</TipoDocumento>
                 <Divisa>EUR</Divisa>
                 <Data>2019-01-18</Data>
                 <Numero>4/2019</Numero>
                 <ImportoTotaleDocumento>423.30</ImportoTotaleDocumento>
                 <Arrotondamento>0.00</Arrotondamento>
-				<DatiCassaPrevidenziale>
-					<TipoCassa>TC01</TipoCassa>
-					<AlCassa>1.00</AlCassa>
-					<ImportoContributoCassa>1.00</ImportoContributoCassa>
-					<AliquotaIVA>0.04</AliquotaIVA>
-				</DatiCassaPrevidenziale>
             </DatiGeneraliDocumento>
             <DatiOrdineAcquisto>
                 <IdDocumento>7</IdDocumento>

@@ -3,6 +3,7 @@ package biz.opengate.fatturaelettronica.validator;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.xml.datatype.DatatypeConstants;
@@ -12,6 +13,27 @@ import biz.opengate.fatturaelettronica.*;
 import biz.opengate.fatturaelettronica.utils.IVAUtils;
 
 public class FatturaElettronicaContentValidator {
+	
+	private static List<NaturaType> natureInvalide = Arrays.asList(new NaturaType[] {NaturaType.N_2, NaturaType.N_3, NaturaType.N_6});
+	
+	private static List<NaturaType> natureN6 = Arrays.asList(new NaturaType[] {
+			NaturaType.N_6, NaturaType.N_6_1, NaturaType.N_6_2, NaturaType.N_6_3, NaturaType.N_6_4,
+			NaturaType.N_6_5, NaturaType.N_6_6, NaturaType.N_6_7, NaturaType.N_6_8, NaturaType.N_6_9
+	});
+	
+	private static List<TipoDocumentoType> tipiDocumentoCedenteCessionarioNonEquivalenti = Arrays.asList(new TipoDocumentoType[] {
+		TipoDocumentoType.TD_01, TipoDocumentoType.TD_02, TipoDocumentoType.TD_03, TipoDocumentoType.TD_06,
+		TipoDocumentoType.TD_16, TipoDocumentoType.TD_17, TipoDocumentoType.TD_18, TipoDocumentoType.TD_19,
+		TipoDocumentoType.TD_20, TipoDocumentoType.TD_24, TipoDocumentoType.TD_25, TipoDocumentoType.TD_28
+	});
+	
+	private static List<TipoDocumentoType> tipiDocumentoCedenteCessionarioEquivalenti = Arrays.asList(new TipoDocumentoType[] {
+		TipoDocumentoType.TD_21, TipoDocumentoType.TD_27
+	});
+	
+	private static List<TipoDocumentoType> tipiDocumentoPaeseNoIt = Arrays.asList(new TipoDocumentoType[] {
+		TipoDocumentoType.TD_17, TipoDocumentoType.TD_18, TipoDocumentoType.TD_19, TipoDocumentoType.TD_28
+	});
 
     /**
      * Check for extra schema errors in the electronic invoice, and
@@ -97,6 +119,28 @@ public class FatturaElettronicaContentValidator {
 		
 		// BODY
 		for (FatturaElettronicaBodyType feBody : fatturaElettronica.getFatturaElettronicaBody()) {
+			
+			TipoDocumentoType tipoDocumento = feBody.getDatiGenerali().getDatiGeneraliDocumento().getTipoDocumento();
+			
+			//Errore 471
+			if(tipiDocumentoCedenteCessionarioNonEquivalenti.contains(tipoDocumento)) {
+				if(IVAUtils.equalsIdFiscaleIVACedenteCessionario(feHeader)) {
+					throw new Exception(Errori.e471);
+				}
+			}
+			//Errore 472
+			if(tipiDocumentoCedenteCessionarioEquivalenti.contains(tipoDocumento)) {
+				if(!IVAUtils.equalsIdFiscaleIVACedenteCessionario(feHeader)) {
+					throw new Exception(Errori.e472);
+				}
+			}
+			//Errore 473
+			if(tipiDocumentoPaeseNoIt.contains(tipoDocumento)) {
+				if(cedentePrestatore.getDatiAnagrafici().getIdFiscaleIVA().getIdPaese().equals("IT")) {
+					throw new Exception(Errori.e473);
+				}
+			}
+			
 			controllaFEBody(feBody);
 			FatturaElettronicaCalcoli.controllaCalcoloImponibileImporto(feBody.getDatiBeniServizi(), feBody.getDatiGenerali());
 			FatturaElettronicaCalcoli.controllaCalcoloPrezzoTotale(feBody.getDatiBeniServizi().getDettaglioLinee());
@@ -126,15 +170,17 @@ public class FatturaElettronicaContentValidator {
 		// 2.1.1.3
 		XMLGregorianCalendar dataDocumento = datiGeneraliDocumento.getData();
 		
+		List<BigDecimal> aliquoteIvaDatiCassaPrevidenziale = new ArrayList<BigDecimal>();
+		List<BigDecimal> aliquoteIvaDettaglioLinee = new ArrayList<BigDecimal>();
+		List<BigDecimal> aliquoteIvaDatiRiepilogo = new ArrayList<BigDecimal>();
+		
+		List<NaturaType> natureDatiCassaPrevidenziale = new ArrayList<NaturaType>();
+		List<NaturaType> natureDettaglioLinee = new ArrayList<NaturaType>();
+		List<NaturaType> natureDatiRiepilogo = new ArrayList<NaturaType>();
+		
 		//Errore 425
 		if(!datiGeneraliDocumento.getNumero().matches(".*[0-9]+.*"))
 			throw new Exception(Errori.e425 + "\n(" + datiGeneraliDocumento.getNumero() + ")");
-		
-		DatiRitenutaType datiRitenuta;
-		if(datiGeneraliDocumento.getDatiRitenuta() != null)
-			datiRitenuta = datiGeneraliDocumento.getDatiRitenuta();
-		else
-			datiRitenuta = null;
 		
 		//Errore 415
 		boolean datiRitenutaNecessari = false;
@@ -165,10 +211,18 @@ public class FatturaElettronicaContentValidator {
 			if(!datiCassaPrevidenziale.getAliquotaIVA().equals(BigDecimal.ZERO.setScale(2)) && datiCassaPrevidenziale.getAliquotaIVA().compareTo(BigDecimal.ONE) == -1) {
 				throw new Exception(Errori.e424c + "\n(IVA dati cassa previdenziale: " + datiCassaPrevidenziale.getAliquotaIVA() + ")");
 			}
+
+			//Errore 445
+			if(natureInvalide.contains(datiCassaPrevidenziale.getNatura())) {
+				throw new Exception(Errori.e445);
+			}
+			
+			aliquoteIvaDatiCassaPrevidenziale.add(datiCassaPrevidenziale.getAliquotaIVA());
+			natureDatiCassaPrevidenziale.add(datiCassaPrevidenziale.getNatura());
 		}
 		
 		if(datiRitenutaNecessari) {
-			if(datiGeneraliDocumento.getDatiRitenuta() == null) {
+			if(datiGeneraliDocumento.getDatiRitenuta().isEmpty()) {
 				throw new Exception(Errori.e415);
 			}
 		}
@@ -200,13 +254,20 @@ public class FatturaElettronicaContentValidator {
 		// 2.2.1 DettaglioLinee
 		for (DettaglioLineeType dettaglioLinea : datiBeniServizi.getDettaglioLinee()) {
 			
-			//Errore 400,401
 			if(dettaglioLinea.getAliquotaIVA().equals(BigDecimal.ZERO.setScale(2))) {
-				if(dettaglioLinea.getNatura()==null)
+				//Errore 400
+				if(dettaglioLinea.getNatura()==null) {
 					throw new Exception(Errori.e400);
+				}
+				//Errore 474
+				if(tipoDocumento.equals(TipoDocumentoType.TD_21)) {
+					throw new Exception(Errori.e474);
+				}
 			} else {
-				if(dettaglioLinea.getNatura() != null)
+				//Errore 401
+				if(dettaglioLinea.getNatura() != null) {
 					throw new Exception(Errori.e401);
+				}
 			}
 			
 			//Errore 419
@@ -234,11 +295,18 @@ public class FatturaElettronicaContentValidator {
 			if(dettaglioLinea.getRitenuta() == RitenutaType.SI)
 				datiRitenutaNecessari = true;
 			
+			//Errore 445
+			if(natureInvalide.contains(dettaglioLinea.getNatura())) {
+				throw new Exception(Errori.e445);
+			}
+			
+			aliquoteIvaDettaglioLinee.add(dettaglioLinea.getAliquotaIVA());
+			natureDettaglioLinee.add(dettaglioLinea.getNatura());
 		}
 		
 		//Errore 411
 		if(datiRitenutaNecessari) {
-			if(datiRitenuta==null) {
+			if(datiGeneraliDocumento.getDatiRitenuta().isEmpty()) {
 				throw new Exception(Errori.e411);
 			}
 		}
@@ -252,7 +320,7 @@ public class FatturaElettronicaContentValidator {
 			
 			//Errore 420
 			if(datiRiepilogo.getEsigibilitaIVA() != null && datiRiepilogo.getNatura() != null) {
-				if(datiRiepilogo.getEsigibilitaIVA() == EsigibilitaIVAType.S && datiRiepilogo.getNatura() == NaturaType.N_6) {
+				if(datiRiepilogo.getEsigibilitaIVA() == EsigibilitaIVAType.S && natureN6.contains(datiRiepilogo.getNatura())) {
 					throw new Exception(Errori.e420);
 				}
 			}
@@ -282,7 +350,41 @@ public class FatturaElettronicaContentValidator {
 					throw new Exception(Errori.e430);
 				}
 			}
+			
+			//Errore 445
+			if(natureInvalide.contains(datiRiepilogo.getNatura())) {
+				throw new Exception(Errori.e445);
+			}
+			
+			aliquoteIvaDatiRiepilogo.add(datiRiepilogo.getAliquotaIVA());
+			natureDatiRiepilogo.add(datiRiepilogo.getNatura());
 		}
+		
+		//Errore 443
+		for(BigDecimal aliquotaIvaDatiCassaPrevidenziale : aliquoteIvaDatiCassaPrevidenziale) {
+			if(!aliquoteIvaDatiRiepilogo.contains(aliquotaIvaDatiCassaPrevidenziale)) {
+				throw new Exception(Errori.e443);
+			}
+		}
+		for(BigDecimal aliquotaIvaDettaglioLinee : aliquoteIvaDettaglioLinee) {
+			if(!aliquoteIvaDatiRiepilogo.contains(aliquotaIvaDettaglioLinee)) {
+				throw new Exception(Errori.e443);
+			}
+		}
+		
+		//Errore 444
+		for(NaturaType naturaDatiCassaPrevidenziale : natureDatiCassaPrevidenziale) {
+			if(!natureDatiRiepilogo.contains(naturaDatiCassaPrevidenziale)) {
+				throw new Exception(Errori.e444);
+			}
+		}
+		for(NaturaType naturaDettaglioLinee : natureDettaglioLinee) {
+			if(!natureDatiRiepilogo.contains(naturaDettaglioLinee)) {
+				throw new Exception(Errori.e444);
+			}
+		}
+		
+		
 
 	}
 	
@@ -315,7 +417,14 @@ public class FatturaElettronicaContentValidator {
 		public static String e429 = "Errore 00429 - " + "2.2.2.2 <Natura> non presente a fronte di 2.2.2.1 <AliquotaIVA> pari a zero";
 		public static String e430 = "Errore 00430 - " + "2.2.2.2 <Natura> presente a fronte di 2.2.2.1 <AliquotaIVA> diversa da zero";
 		public static String e437 = "Errore 00437 - " + "2.1.1.8.2 <Percentuale> e 2.1.1.8.3 <Importo> non presenti a fronte di 2.1.1.8.1 <Tipo> valorizzato";
-		public static String e438 = "Errore 00438 - " + "2.2.1.10.2 <Percentuale> e 2.2.1.10.3 <Importo> non presenti a fronte di 2.2.1.10.1 <Tipo> valorizzato";
+		public static String e438 = "Errore 00438 - " + "2.2.1.10.2 <Percentuale> e 2.2.1.10.3 <Importo> non presenti a fronte di 2.2.1.10.1 <Tipo> valorizzato";	
+		public static String e443 = "Errore 00443 - " + "Non c’è corrispondenza tra i valori indicati nell’elemento 2.2.1.12 <AliquotaIVA> o 2.1.1.7.5 <AliquotaIVA> e quelli dell’elemento 2.2.2.1 <ALiquotaIVA>";
+		public static String e444 = "Errore 00444 - " + "Non c’è corrispondenza tra i valori indicati nell’elemento 2.2.1.14 <Natura> o 2.1.1.7.7 <Natura> e quelli dell’elemento 2.2.2.2 <Natura>";
+		public static String e445 = "Errore 00445 - " + "Non è più ammesso il valore generico N2, N3 o N6 come codice natura dell’operazione";
+		public static String e471 = "Errore 00471 - " + "Per il valore indicato nell’elemento 2.1.1.1 <TipoDocumento> il cedente/prestatore non può essere uguale al cessionario/committente";
+		public static String e472 = "Errore 00472 - " + "Per il valore indicato nell’elemento 2.1.1.1 <TipoDocumento> il cedente/prestatore deve essere uguale al cessionario/committente";
+		public static String e473 = "Errore 00473 - " + "Per il valore indicato nell’elemento 2.1.1.1 <TipoDocumento> il valore nell’elemento 1.2.1.1.1 <IdPaese> non è ammesso";
+		public static String e474 = "Errore 00474 - " + "Per il valore indicato nell’elemento 2.1.1.1 <TipoDocumento> non sono ammesse linee di dettaglio con l’elemento 2.2.1.12 <AliquotaIVA> contenente valore zero";
 		public static String eIVA = "Codice IVA non valido";
 	}
 }

@@ -42,7 +42,7 @@
             <DatiAnagrafici>
                 <IdFiscaleIVA>
                     <IdPaese>IT</IdPaese>
-                    <IdCodice>07643520567</IdCodice>
+                    <IdCodice>08033300966</IdCodice>
                 </IdFiscaleIVA>
                 <Anagrafica>
                     <Denominazione>Generic Customer</Denominazione>
@@ -60,18 +60,12 @@
     <FatturaElettronicaBody>
         <DatiGenerali>
             <DatiGeneraliDocumento>
-                <TipoDocumento>TD01</TipoDocumento>
+                <TipoDocumento>TD21</TipoDocumento>
                 <Divisa>EUR</Divisa>
                 <Data>2019-01-18</Data>
                 <Numero>4/2019</Numero>
                 <ImportoTotaleDocumento>423.30</ImportoTotaleDocumento>
                 <Arrotondamento>0.00</Arrotondamento>
-				<DatiCassaPrevidenziale>
-					<TipoCassa>TC01</TipoCassa>
-					<AlCassa>1.00</AlCassa>
-					<ImportoContributoCassa>1.00</ImportoContributoCassa>
-					<AliquotaIVA>0.04</AliquotaIVA>
-				</DatiCassaPrevidenziale>
             </DatiGeneraliDocumento>
             <DatiOrdineAcquisto>
                 <IdDocumento>7</IdDocumento>
@@ -133,15 +127,17 @@
                 <Quantita>1.00</Quantita>
                 <PrezzoUnitario>100.00</PrezzoUnitario>
                 <PrezzoTotale>100.00</PrezzoTotale>
-                <AliquotaIVA>4.00</AliquotaIVA>
+                <AliquotaIVA>0.00</AliquotaIVA>
+                <Natura>N1</Natura>
             </DettaglioLinee>
             <DatiRiepilogo>
-                <AliquotaIVA>4.00</AliquotaIVA>
+                <AliquotaIVA>0.00</AliquotaIVA>
                 <SpeseAccessorie>0.00</SpeseAccessorie>
                 <Arrotondamento>0.00</Arrotondamento>
                 <ImponibileImporto>100.00</ImponibileImporto>
-                <Imposta>4.00</Imposta>
+                <Imposta>0.00</Imposta>
                 <EsigibilitaIVA>D</EsigibilitaIVA>
+                <Natura>N1</Natura>
             </DatiRiepilogo>
             <DatiRiepilogo>
                 <AliquotaIVA>10.00</AliquotaIVA>

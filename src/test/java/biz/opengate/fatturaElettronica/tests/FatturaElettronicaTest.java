@@ -22,7 +22,7 @@ public class FatturaElettronicaTest {
 		//Controlla che la fattura elettronica sia valida
 		FatturaElettronicaValidator.controllaFE(fatturaElettronica);
 		//Genera e crea il file xml
-		File fpr =	FEUtils.marshalToFile(fatturaElettronica, tempDir, filename);
+		File fpr = FEUtils.marshalToFile(fatturaElettronica, tempDir, filename);
 		fpr.createNewFile();
 		//Confronta con file di test
 		FileAssert.assertEquals(new File(this.getClass().getResource("/" + filename).getFile()), fpr);
@@ -92,6 +92,13 @@ public class FatturaElettronicaTest {
 		testerror("/IT08033300966_ER430.xml", Errori.e430);
 		testerror("/IT08033300966_ER437.xml", Errori.e437);
 		testerror("/IT08033300966_ER438.xml", Errori.e438);
+		
+		testerror("/IT08033300966_ER443.xml", Errori.e443);
+		testerror("/IT08033300966_ER444.xml", Errori.e444);
+		testerror("/IT08033300966_ER471.xml", Errori.e471);
+		testerror("/IT08033300966_ER472.xml", Errori.e472);
+		testerror("/IT08033300966_ER473.xml", Errori.e473);
+		testerror("/IT08033300966_ER474.xml", Errori.e474);
 
 		try {
 			IVAUtils.validateIVA("07643520567");

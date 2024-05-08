@@ -62,7 +62,7 @@ public class FatturaElettronicaSemplice {
 					DatiAnagraficiCessionarioType datiAnagraficiCessionario = new DatiAnagraficiCessionarioType();
 						IdFiscaleType idFiscaleCessionario = new IdFiscaleType();
 							idFiscaleCessionario.setIdPaese("IT");
-							idFiscaleCessionario.setIdCodice("07643520567");
+							idFiscaleCessionario.setIdCodice("24970530309");
 						datiAnagraficiCessionario.setIdFiscaleIVA(idFiscaleCessionario);
 						datiAnagraficiCessionario.setCodiceFiscale("01234567890");
 						AnagraficaType anagraficaCessionario = new AnagraficaType();
@@ -238,7 +238,7 @@ public class FatturaElettronicaSemplice {
 						dettaglioLinea.setPrezzoUnitario(new BigDecimal(100.00).setScale(2));
 						dettaglioLinea.setPrezzoTotale(new BigDecimal(100.00).setScale(2));
 						dettaglioLinea.setAliquotaIVA(new BigDecimal(0.00).setScale(2));
-						dettaglioLinea.setNatura(NaturaType.N_3);
+						dettaglioLinea.setNatura(NaturaType.N_3_1);
 					dettagliLinee.add(dettaglioLinea);
 					dettaglioLinea = new DettaglioLineeType();
 						dettaglioLinea.setNumeroLinea(20);
@@ -247,12 +247,12 @@ public class FatturaElettronicaSemplice {
 						dettaglioLinea.setPrezzoUnitario(new BigDecimal(100.00).setScale(2));
 						dettaglioLinea.setPrezzoTotale(new BigDecimal(100.00).setScale(2));
 						dettaglioLinea.setAliquotaIVA(new BigDecimal(0.00).setScale(2));
-						dettaglioLinea.setNatura(NaturaType.N_3);
+						dettaglioLinea.setNatura(NaturaType.N_3_1);
 					dettagliLinee.add(dettaglioLinea);
 					datiBeniServizi.getDettaglioLinee().addAll(dettagliLinee);
 				DatiRiepilogoType datiRiepilogo = new DatiRiepilogoType();
 					datiRiepilogo.setAliquotaIVA(new BigDecimal(0.00).setScale(2));
-					datiRiepilogo.setNatura(NaturaType.N_3);
+					datiRiepilogo.setNatura(NaturaType.N_3_1);
 					datiRiepilogo.setImponibileImporto(new BigDecimal(200.00).setScale(2));
 					datiRiepilogo.setImposta(new BigDecimal(0.00).setScale(2));
 					datiRiepilogo.setEsigibilitaIVA(EsigibilitaIVAType.I);

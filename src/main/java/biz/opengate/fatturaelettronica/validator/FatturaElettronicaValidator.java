@@ -43,7 +43,6 @@ public class FatturaElettronicaValidator {
      * @throws Exception
      */
 	public static void controllaFE(FatturaElettronicaType fatturaElettronica) throws Exception {
-		//System.out.println("Controllo Fattura Elettronica");
 		///////////////////////////////////////////////////////////////////////
 		final Schema schema;
 		try {
@@ -71,12 +70,11 @@ public class FatturaElettronicaValidator {
 		} catch (Exception e) {
 			throw new Exception("Impossibile analizzare la fattura elettronica");
 		}
-		if (validationHandler.hasErrors())
+		if (validationHandler.hasErrors()) {
 			throw new FatturaElettronicaValidationException(validationHandler.getResult());
+		}
 		///////////////////////////////////////////////////////////////////////
 		FatturaElettronicaContentValidator.controllaContenutoFE(fatturaElettronica);
-		
-		//System.out.println("Fattura valida");
 	}
 	
 	private static class ResourceResolverImpl implements LSResourceResolver {
@@ -130,13 +128,15 @@ public class FatturaElettronicaValidator {
 			result.append("SEVERITY: "			+ event.getSeverity()					+ "\n");
 			result.append("MESSAGE: "			+ event.getMessage()					+ "\n");
 			result.append("LINKED EXCEPTION: "	+ event.getLinkedException()			+ "\n");
-			result.append("LOCATOR\n");
-			result.append("\t\tLINE NUMBER: "	+ event.getLocator().getLineNumber()	+ "\n");
-			result.append("\t\tCOLUMN NUMBER: "	+ event.getLocator().getColumnNumber()	+ "\n");
-			result.append("\t\tOFFSET: "		+ event.getLocator().getOffset()		+ "\n");
-			result.append("\t\tOBJECT: "		+ event.getLocator().getObject()		+ "\n");
-			result.append("\t\tNODE: "			+ event.getLocator().getNode()			+ "\n");
-			result.append("\t\tURL: "			+ event.getLocator().getURL()			+ "\n");
+			if(event.getLocator() != null) {
+				result.append("LOCATOR\n");
+				result.append("\t\tLINE NUMBER: "	+ event.getLocator().getLineNumber()	+ "\n");
+				result.append("\t\tCOLUMN NUMBER: "	+ event.getLocator().getColumnNumber()	+ "\n");
+				result.append("\t\tOFFSET: "		+ event.getLocator().getOffset()		+ "\n");
+				result.append("\t\tOBJECT: "		+ event.getLocator().getObject()		+ "\n");
+				result.append("\t\tNODE: "			+ event.getLocator().getNode()			+ "\n");
+				result.append("\t\tURL: "			+ event.getLocator().getURL()			+ "\n");
+			}
 			return true;
 		}
 
